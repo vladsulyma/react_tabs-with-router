@@ -1,7 +1,8 @@
 import * as React from 'react';
-import classNames from 'classnames';
-import { Link, useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { tabs } from '../constants/Tabs';
+import { Tabs } from '../components/Tabs';
+import { Tab } from '../components/Tab';
 
 export const TabsPage = () => {
   const { tabId } = useParams<{ tabId: string }>();
@@ -10,25 +11,20 @@ export const TabsPage = () => {
   return (
     <>
       <h1 className="title">Tabs page</h1>
-      <div className="tabs is-boxed">
-        <ul>
-          {tabs.map(tab => (
-            <li
-              data-cy="Tab"
-              key={tab.id}
-              className={classNames({ 'is-active': tab.id === tabId })}
-            >
-              <Link to={`/tabs/${tab.id}`}>{tab.title}</Link>
-            </li>
-          ))}
-        </ul>
-      </div>
 
-      {activeTab ? (
-        <div className="block" data-cy="TabContent">
-          {activeTab.content}
-        </div>
-      ) : (
+      <Tabs activeTabId={tabId || ''}>
+        {tabs.map(tab => (
+          <Tab
+            key={tab.id}
+            id={tab.id}
+            title={<Link to={`/tabs/${tab.id}`}>{tab.title}</Link>}
+          >
+            {tab.content}
+          </Tab>
+        ))}
+      </Tabs>
+
+      {!activeTab && (
         <div className="block" data-cy="TabContent">
           Please select a tab
         </div>
